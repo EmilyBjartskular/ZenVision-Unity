@@ -1,5 +1,9 @@
-﻿internal interface IProperties
+﻿using System.Collections.Generic;
+internal interface IProperties
 {
-    //todo
+    //todo properties
     string value { get; set; }
+    
+    List<string> DataDeluge();
+    
 }
