@@ -4,14 +4,6 @@ using UnityEngine;
 
 public abstract class SensorDataFactory 
 {
-    SensorDataFactory() {
-    }
-
-    public virtual ISensorData Factory(SensorType type,string querry="*") {
-        
-    }
+    public abstract ISensorData Factory();
 }
 
-public enum SensorType {
-    MotionSensor, DoorSensor, ZWaveSensor1 //this is super temporary
-}

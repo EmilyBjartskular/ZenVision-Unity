@@ -12,11 +12,11 @@ public interface ISensorData
     bool enabled { get; set; }
     bool visable { get; set; }
     string parentId { get; set; }    
+    IProperties propertiy { get; set; }
     Time created { get; set; }
     Time modifier { get; set; }
     List<string> interfaces { get; set; }
 
     string getCurrentData();
-    string filter(string filter);
     string getTextOutput(); //todo make format for canvas item.
 }

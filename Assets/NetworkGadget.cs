@@ -134,7 +134,7 @@ public class WebsocketClient
 
     private async void CloseConnection()
     {
-        await client.CloseAsync(WebSocketCloseStatus);
+        await client.CloseAsync(WebSocketCloseStatus.Empty, "end", CancellationToken.None);
         DisposeConnection();
     }
 
