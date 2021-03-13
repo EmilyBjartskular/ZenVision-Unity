@@ -17,13 +17,15 @@ public class NetworkGadget
         client = new WebsocketClient(new Uri(ENDPOINT));
     }
 
-    public static NetworkGadget getInstance() {
+    public static NetworkGadget GetInstance() {
         if (instance == null) {
             instance = new NetworkGadget();
         }
         return instance;
     }
-
+    public Action<string> RecieveAction() {
+        return this.client.messageReceived;
+    }
 }
 public class WebsocketClient
 {
@@ -90,7 +92,7 @@ public class WebsocketClient
             if (chunkResult.MessageType == WebSocketMessageType.Text)
             {
                 string message = StreamToString(stream);
-                messageReceived(message);
+                messageReceived(message)
 
             }
 
@@ -111,7 +113,7 @@ public class WebsocketClient
         return readString;
     }
 
-    private async Task Process()
+    public async Task Process()
     {
         Task dequeSendMessages = Task.Factory.StartNew(async () => {
             while (!sendQueue.IsCompleted)
@@ -132,7 +134,7 @@ public class WebsocketClient
     }
 
 
-    private async void CloseConnection()
+    public async void CloseConnection()
     {
         await client.CloseAsync(WebSocketCloseStatus.Empty, "end", CancellationToken.None);
         DisposeConnection();

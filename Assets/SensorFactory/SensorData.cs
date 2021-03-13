@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public abstract class SensorData : ISensorData
 {
     public string deviceID { get ; set ; }
@@ -29,7 +31,7 @@ public abstract class SensorData : ISensorData
         this.propertiy = new SensorProperty();
     }
 }
-
+[Serializable]
 public class SensorProperty : IProperties
 {
     public string zwaveCompany { get; set; }
