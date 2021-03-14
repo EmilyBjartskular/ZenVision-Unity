@@ -592,7 +592,7 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: ZenVision
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: C:\UnityWorkspace\ZenVision\Assets\WSATestCertificate.pfx
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
