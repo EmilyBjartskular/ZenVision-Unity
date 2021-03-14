@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Keys: 0e000000
   Values:
-  - {fileID: 812622810567726611}
+  - {fileID: 528729692577582239}
   BuildValues:
-  - {fileID: 3161149707681156772}
---- !u!114 &812622810567726611
+  - {fileID: 5900417330633547765}
+--- !u!114 &528729692577582239
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,7 +31,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DepthBufferFormat: 0
   UseSharedDepthBuffer: 0
---- !u!114 &3161149707681156772
+--- !u!114 &5900417330633547765
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

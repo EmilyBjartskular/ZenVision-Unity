@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/smart_lab.unity
-    guid: a44cd2b9874eb654fa763899793acc9f
+    path: Assets/Scenes/ZenVision.unity
+    guid: 4dbca07d462620f41aace5385aa69dab
   m_configObjects:
-    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 2839c812e5cecae429b4fc09e6cbfbb8,
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 52bcbba0b3a5d5845b201a8bebe8ad3f,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 153b0291ae16745418abdd6287024ec4,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d0e2a8fda0ccaf942b5749b03f4c45bb,
       type: 2}
