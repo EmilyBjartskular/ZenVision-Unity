@@ -1,6 +1,7 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 
 # Azure spatial anchors config
+/Assets/AzureSpatialAnchors.SDK/Resources
 SpatialAnchorConfig.asset*
 *Tutorials*
 

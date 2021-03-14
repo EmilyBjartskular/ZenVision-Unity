@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -671,6 +671,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2204069621426241314, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
+        type: 3}
+      propertyPath: MinDistance
+      value: 0.29806092
+      objectReference: {fileID: 0}
     - target: {fileID: 2204069621426241315, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
       propertyPath: m_Name
@@ -754,7 +759,7 @@ PrefabInstance:
     - target: {fileID: 2204069623020599746, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.025
       objectReference: {fileID: 0}
     - target: {fileID: 2204069623020599746, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
@@ -764,12 +769,12 @@ PrefabInstance:
     - target: {fileID: 2204069623020599746, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9980677
       objectReference: {fileID: 0}
     - target: {fileID: 2204069623020599746, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.062137432
       objectReference: {fileID: 0}
     - target: {fileID: 2204069623020599746, guid: 3f1f46cbecbe08e46a303ccfdb5b498a,
         type: 3}
@@ -1123,7 +1128,7 @@ MonoBehaviour:
   sensorPrefab: {fileID: 3502909469518240030, guid: 06533e37eb3846b4da053c435d3ac49f,
     type: 3}
   sensorDistance: 0.6
-  kvStoreApiUri: http://192.168.1.50:5000
+  kvStoreApiUri: http://130.240.114.14:5000
   btnCollMain: {fileID: 783926835}
   btnCollEdit: {fileID: 822831828}
   keyboard: {fileID: 1979366140}
@@ -1680,6 +1685,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3523451869047766341, guid: 7a0463852133273408acba8cf47ace42,
         type: 3}
+      propertyPath: anchor
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3523451869047766341, guid: 7a0463852133273408acba8cf47ace42,
+        type: 3}
       propertyPath: radius
       value: 0.1
       objectReference: {fileID: 0}
@@ -1696,7 +1706,7 @@ PrefabInstance:
     - target: {fileID: 3523451869047766341, guid: 7a0463852133273408acba8cf47ace42,
         type: 3}
       propertyPath: orientType
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3523451869047766341, guid: 7a0463852133273408acba8cf47ace42,
         type: 3}
@@ -1727,6 +1737,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3523451869047766395, guid: 7a0463852133273408acba8cf47ace42,
+        type: 3}
+      propertyPath: referenceDirection
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a0463852133273408acba8cf47ace42, type: 3}

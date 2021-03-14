@@ -24,8 +24,9 @@ public class AnchorManager : MonoBehaviour
     private bool isErrorActive = false;
 
     private GameObject currentSensor;
-    private CloudSpatialAnchor currentCloudAnchor;
+    private Sensor currentSensorSensor;
     private ToolTip currentSensorToolTip;
+    private CloudSpatialAnchor currentCloudAnchor;
     private string currentID;
 
     private string keyboardText;
@@ -115,7 +116,8 @@ public class AnchorManager : MonoBehaviour
         if (keyboardActive)
         {
             keyboardText = keyboard.Text;
-            currentSensorToolTip.ToolTipText = keyboardText;
+            currentSensorSensor.SetSensorID(keyboardText);
+            // currentSensorToolTip.ToolTipText = keyboardText;
         }
     }
 
@@ -135,18 +137,14 @@ public class AnchorManager : MonoBehaviour
     #endregion
 
     #region Public functions
-    public async void GetSensors()
-    {
-
-    }
-
     public void CreateSensor()
     {
         // Get the head ray
         Ray headRay = InputRayUtils.GetHeadGazeRay();
 
         currentSensor = CreateLocalSensor(headRay.GetPoint(sensorDistance));
-        currentSensorToolTip = currentSensor.transform.GetChild(0).GetComponent<ToolTip>();
+        currentSensorSensor = currentSensor.GetComponent<Sensor>();
+        // currentSensorToolTip = currentSensor.transform.GetChild(0).GetComponent<ToolTip>();
 
         btnCollMain.SetActive(false);
         btnCollEdit.SetActive(true);
@@ -182,7 +180,7 @@ public class AnchorManager : MonoBehaviour
         keyboardText = keyboard.Text;
 
         currentID = keyboardText;
-        currentSensorToolTip.ToolTipText = keyboardText;
+        currentSensorSensor.SetSensorID(keyboardText);
         Debug.Log(keyboardText);
         keyboardActive = false;
     }
@@ -222,6 +220,22 @@ public class AnchorManager : MonoBehaviour
         // UnityDispatcher.InvokeOnAppThread(() => this.feedbackBox.text = string.Format("Error: {0}", exception.ToString()));
     }
 
+    protected virtual void OnCloudAnchorLocated(object sender, AnchorLocatedEventArgs args)
+    {
+        if (args.Status == LocateAnchorStatus.Located)
+        {
+            CloudSpatialAnchor cloudAnchor = args.Anchor;
+
+            UnityDispatcher.InvokeOnAppThread(() =>
+            {
+                Pose anchorPose = Pose.identity;
+
+                GameObject sensor = CreateLocalSensor(anchorPose.position);
+                CloudNativeAnchor cloudNativeAnchor = sensor.GetComponent<CloudNativeAnchor>();
+                cloudNativeAnchor.CloudToNative(cloudAnchor);
+            });
+        }
+    }
     #endregion
 
     #region Internal functions
@@ -236,6 +250,7 @@ public class AnchorManager : MonoBehaviour
     private void ResetCurrent()
     {
         currentSensor = null;
+        currentSensorSensor = null;
         currentSensorToolTip = null;
         currentID = null;
         currentCloudAnchor = null;
@@ -258,19 +273,12 @@ public class AnchorManager : MonoBehaviour
 
         // Get the cloud-native anchor behavior
         CloudNativeAnchor cna = currentSensor.GetComponent<CloudNativeAnchor>();
-        Debug.Log(cna);
 
         // If the cloud portion of the anchor hasn't been created yet, create it
         if (cna.CloudAnchor == null) { cna.NativeToCloud(); }
 
         // Get the cloud portion of the anchor
         CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
-        Debug.Log(cloudAnchor);
-
-        Debug.Log(cloudManager);
-        Debug.Log(cloudManager.IsReadyForCreate);
-        Debug.Log(cloudManager.SessionStatus);
-        Debug.Log(cloudManager.SessionStatus.RecommendedForCreateProgress);
 
         while (!cloudManager.IsReadyForCreate)
         {
@@ -283,15 +291,12 @@ public class AnchorManager : MonoBehaviour
 
         try
         {
-            Debug.Log("1");
             // Actually save
             await cloudManager.CreateAnchorAsync(cloudAnchor);
 
-            Debug.Log("2");
             // Store
             currentCloudAnchor = cloudAnchor;
 
-            Debug.Log("3");
             // Success?
             success = currentCloudAnchor != null;
 
@@ -299,23 +304,17 @@ public class AnchorManager : MonoBehaviour
             {
                 // Await override, which may perform additional tasks
                 // such as storing the key in the AnchorExchanger
-                Debug.Log("Maybe we made it???");
                 await OnSaveCloudAnchorSuccessfulAsync();
             }
             else
             {
-                Debug.Log("Are we here?");
                 OnSaveCloudAnchorFailed(new Exception("Failed to save, but no exception was thrown."));
             }
         }
         catch (Exception ex)
         {
-            Debug.Log("We are here");
             OnSaveCloudAnchorFailed(ex);
         }
-
-        Debug.Log("success?");
-        Debug.Log(currentCloudAnchor.Identifier);
 
         string uri = kvStoreApiUri + "/set_anchor";
         WWWForm form = new WWWForm();
@@ -334,6 +333,14 @@ public class AnchorManager : MonoBehaviour
                 Debug.Log("Success");
             }
         }
+
+        sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor);
+        ResetCurrent();
+    }
+
+    protected virtual async Task LoadAnchorFromCloudAsync(string cloudAnchor, string sensorID)
+    {
+
     }
 
     /// <summary>
@@ -342,6 +349,12 @@ public class AnchorManager : MonoBehaviour
     /// <param name="hitPoint">The hit point.</param>
     protected virtual GameObject CreateLocalSensor(Vector3 hitPoint)
     {
+        if (currentSensor != null)
+        {
+            Debug.Log("You are already editing a sensor, did not create a new one.");
+            return currentSensor;
+        }
+
         // Create a white sphere.
         // Create the prefab
         GameObject newGameObject = GameObject.Instantiate(sensorPrefab, hitPoint, Quaternion.identity) as GameObject;
@@ -384,7 +397,7 @@ public class AnchorManager : MonoBehaviour
 
                 foreach(var kvpair in list)
                 {
-                    Debug.Log(kvpair);
+                    // currentCloudAnchor = 
                 }
             }
         }

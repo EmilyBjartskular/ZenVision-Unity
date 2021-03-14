@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Sensor : MonoBehaviour
 {
-    public string SensorID { get { return SensorID; } set { SensorID = value; OnSensorIDUpdate(); } }
+    private string SensorID;
 
     [SerializeField]
     private ToolTip toolTip;
@@ -22,8 +22,9 @@ public class Sensor : MonoBehaviour
         
     }
 
-    public void OnSensorIDUpdate()
+    public void SetSensorID(string id)
     {
+        SensorID = id;
         toolTip.ToolTipText = SensorID;
     }
 }
