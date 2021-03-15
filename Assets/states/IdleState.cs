@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class IdleState : StateManager
 {
-    public IdleState(State current, StateManager next) : base(current, next)
+    public IdleState() : base(State.IDLE)
     {
+        
     }
+
 
 }

@@ -10,15 +10,23 @@ public enum Action {
 public abstract class StateManager
 {
 
-    
-    private State current;
-    private Action action;
-    private StateManager next;
+
+    public State current { get; set; }
+    public Action action { get; set; }
+    public  StateManager next { get; set; }
     public StateManager(State current, StateManager next) {
         this.current = current;
         this.next = next;
         this.action = Action.ENTER;
     }
+
+    protected StateManager(State state)
+    {
+        this.current = state;
+        this.action = Action.ENTER;
+
+    }
+
     public StateManager Process() {
         switch (this.action) {
             case Action.ENTER:

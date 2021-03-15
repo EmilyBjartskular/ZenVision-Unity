@@ -6,28 +6,65 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using UnityEngine;
+using Assets.SensorFactory;
+
+public enum SensorType {
+    DoorSensor, LightSensor, DefaultSensor
+}
 
 public class NetworkGadget : MonoBehaviour
 {
     
     public static readonly string ENDPOINT = "http://localhost:8080";
-    public WebsocketClient client { get; set; }
+    private WebsocketClient client { get; set; }
 
     [SerializeField]
+    private string id;
+
+    [SerializeField]
+    private SensorType type;
+
     private SensorDataFactory sensorFactory;
 
-    [SerializeField]
-    public SensorData sensor { get; set; }
 
-    public NetworkGadget() {
+    public Action<SensorData> DataUpdate { get; set; }
+
+    public async void StartFetch() {
+        await client.Connect();
+        client.sendQueue.Add(id);
+    }
+
+    public void StopFetch() {
+        if(client.isConnected())
+            client.CloseConnection();
+    }
+
+    private SensorDataFactory GetSensorFactory() {
+        switch (type)
+        {
+            case SensorType.DoorSensor:
+                return new DoorSensorFactory();
+            case SensorType.LightSensor:
+                return new LightSensorFactory();
+            case SensorType.DefaultSensor:
+                return new DefaultSensorFactory(); 
+        }
+
+        return null;
+
+    }
+    public void DataAvailable(string message) 
+    {
+        DataUpdate(GetSensorFactory().Data);
+    }
+
+    public void Start()
+    {
         client = new WebsocketClient(new Uri(ENDPOINT));
         client.messageReceived += DataAvailable;
     }
+    private class DefaultSensorFactory : SensorDataFactory { }
 
-    public void DataAvailable(string message) 
-    {
-        sensor = sensorFactory.SensorFactory(message);
-    }
 }
 public class WebsocketClient
 {
@@ -46,7 +83,6 @@ public class WebsocketClient
         URI = uri;
         encoder = new UTF8Encoding();
         client = new ClientWebSocket();
-
         sendQueue = new BlockingCollection<string>();
 
 
@@ -58,6 +94,8 @@ public class WebsocketClient
         while (client.State == WebSocketState.Connecting)
         {
             await Task.Yield();
+            Task task = Process();
+            task.Start();
         }
         Debug.Log("Connect status: " + client.State);
 
@@ -149,6 +187,10 @@ public class WebsocketClient
         client.Dispose();
     }
 
+    internal bool isConnected()
+    {
+        return client.State == WebSocketState.Open;
+    }
 }
 
 

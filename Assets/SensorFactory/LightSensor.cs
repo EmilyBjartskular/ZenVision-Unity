@@ -16,6 +16,7 @@ namespace Assets.SensorFactory
                 var value = JsonUtility.FromJson<SensorData>(message);
                 var res = new LightSensor();
                 res.SetBaseProperties(value);
+                Data = value;
                 return res;
             }
             catch (Exception)

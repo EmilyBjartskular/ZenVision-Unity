@@ -7,14 +7,23 @@ public class SensorText : MonoBehaviour
 {
     [SerializeField]
     private TextMeshPro target;
-    private SensorDataFactory factory;
+    [SerializeField]
+    private NetworkGadget network;
 
     void Start()
     {
         target.text = "No Input Yet";
     }
 
-    void Update()
-    {
+    public void Select() {
+
+        network.DataUpdate += setText;
+    }
+    public void UnSelect() {
+        network.DataUpdate -= setText;
+    }
+
+    void setText(SensorData data) {
+        target.text = data.getTextOutput();
     }
 }

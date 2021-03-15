@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class SensorPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    [SerializeField]
+    private NetworkGadget networkGadget;
+    private StateManager stateManager;
     void Start()
     {
-        
+
+        stateManager = new IdleState();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        stateManager = stateManager.Process();
     }
 }

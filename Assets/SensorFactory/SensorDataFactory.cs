@@ -10,6 +10,7 @@ public abstract class SensorDataFactory
         try
         {
             var value = JsonUtility.FromJson<SensorData>(message);
+            Data = value;
             return value;
         }
         catch (Exception)

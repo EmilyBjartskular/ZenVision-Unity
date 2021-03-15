@@ -14,6 +14,7 @@ namespace Assets.SensorFactory
                 var value = JsonUtility.FromJson<SensorData>(message);
                 var res = new DoorSensor();
                 res.SetBaseProperties(value);
+                Data = value;
                 return res;
             }
             catch (Exception)
