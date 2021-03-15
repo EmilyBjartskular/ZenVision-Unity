@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,24 +7,29 @@ namespace Assets.SensorFactory
 {
     public class DoorSensorFactory : SensorDataFactory
     {
-
-        public override ISensorData Factory()
+        public override SensorData SensorFactory(string message)
         {
-            return new DoorSensor();
+            try
+            {
+                var value = JsonUtility.FromJson<SensorData>(message);
+                var res = new DoorSensor();
+                res.SetBaseProperties(value);
+                return res;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 
     public class DoorSensor : SensorData
     {
-        private string value;
-        public DoorSensor() : base()
-        {
-            this.value = propertiy.value;
-        }
 
-        public override string getTextOutput() //todo make this so that we can generate a icon instead that is highligted vs not heighlited.
+        public override string getTextOutput() 
         {
-            return value;
+            return propertiy.value.Equals("true") ? "Open" : "Closed";
         }
 
     }

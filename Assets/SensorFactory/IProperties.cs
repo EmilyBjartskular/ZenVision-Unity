@@ -46,6 +46,5 @@ public interface IProperties
     string useTemplate { get; set; }
     string value { get; set; }
 
-    List<string> DataDeluge();
 
 }

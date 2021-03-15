@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,11 +13,11 @@ public interface ISensorData
     bool enabled { get; set; }
     bool visable { get; set; }
     string parentId { get; set; }    
-    IProperties propertiy { get; set; }
-    Time created { get; set; }
-    Time modifier { get; set; }
+    SensorProperty propertiy { get; set; }
+    DateTime created { get; set; }
+    DateTime modifier { get; set; }
     List<string> interfaces { get; set; }
 
     string getCurrentData();
-    string getTextOutput(); //todo make format for canvas item.
+    string getTextOutput(); 
 }

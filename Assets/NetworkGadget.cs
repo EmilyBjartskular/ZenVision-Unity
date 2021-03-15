@@ -7,30 +7,32 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using UnityEngine;
 
-public class NetworkGadget
+public class NetworkGadget : MonoBehaviour
 {
-    public static readonly string ENDPOINT = "ws://localhost:2555";
-    private WebsocketClient client { get; set; }
-    private static NetworkGadget instance;
+    
+    public static readonly string ENDPOINT = "http://localhost:8080";
+    public WebsocketClient client { get; set; }
+
+    [SerializeField]
+    private SensorDataFactory sensorFactory;
+
+    [SerializeField]
+    public SensorData sensor { get; set; }
 
     public NetworkGadget() {
         client = new WebsocketClient(new Uri(ENDPOINT));
+        client.messageReceived += DataAvailable;
     }
 
-    public static NetworkGadget GetInstance() {
-        if (instance == null) {
-            instance = new NetworkGadget();
-        }
-        return instance;
-    }
-    public Action<string> RecieveAction() {
-        return this.client.messageReceived;
+    public void DataAvailable(string message) 
+    {
+        sensor = sensorFactory.SensorFactory(message);
     }
 }
 public class WebsocketClient
 {
 
-    public Action<string> messageReceived { get; }
+    public Action<string> messageReceived { get; set; }
     private ClientWebSocket client;
 
     private UTF8Encoding encoder;
@@ -92,7 +94,7 @@ public class WebsocketClient
             if (chunkResult.MessageType == WebSocketMessageType.Text)
             {
                 string message = StreamToString(stream);
-                messageReceived(message)
+                messageReceived(message);
 
             }
 

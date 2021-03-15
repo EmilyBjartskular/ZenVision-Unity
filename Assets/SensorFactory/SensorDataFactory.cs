@@ -1,9 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class SensorDataFactory 
 {
-    public abstract ISensorData Factory();
+    public SensorData Data { get; set; }
+    public virtual SensorData SensorFactory(string message) {
+        try
+        {
+            var value = JsonUtility.FromJson<SensorData>(message);
+            return value;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
 }
 
