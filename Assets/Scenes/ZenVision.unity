@@ -1128,6 +1128,7 @@ MonoBehaviour:
   sensorPrefab: {fileID: 3502909469518240030, guid: 06533e37eb3846b4da053c435d3ac49f,
     type: 3}
   sensorDistance: 0.6
+  anchorFindDistance: 10
   kvStoreApiUri: http://130.240.114.14:5000
   btnCollMain: {fileID: 783926835}
   btnCollEdit: {fileID: 822831828}
@@ -2354,7 +2355,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4679913628556379331}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4684083f6dff4a1d8a790bccc354fcf4, type: 3}
   m_Name: 

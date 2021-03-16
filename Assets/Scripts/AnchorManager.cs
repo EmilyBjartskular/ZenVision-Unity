@@ -11,6 +11,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 //using RestSharp;
 
 #if WINDOWS_UWP
@@ -19,13 +20,14 @@ using Windows.Storage;
 
 public class AnchorManager : MonoBehaviour
 {
-    private List<KeyValuePair<GameObject, CloudSpatialAnchor>> sensorAnchorList = new List<KeyValuePair<GameObject, CloudSpatialAnchor>>();
-    private bool editMode = false;
+    private Dictionary<GameObject, CloudSpatialAnchor> objectDictionary = new Dictionary<GameObject, CloudSpatialAnchor>();
+    // <AnchorID, SensorID>
+    private Dictionary<string, string> idDictionary = new Dictionary<string, string>();
+    //private bool editMode = false;
     private bool isErrorActive = false;
 
     private GameObject currentSensor;
     private Sensor currentSensorSensor;
-    private ToolTip currentSensorToolTip;
     private CloudSpatialAnchor currentCloudAnchor;
     private string currentID;
 
@@ -45,6 +47,10 @@ public class AnchorManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Distance from head to create sensor anchor.")]
     private float sensorDistance = 0.1f;
+
+    [SerializeField]
+    [Tooltip("Radius around device to search for anchors in")]
+    private float anchorFindDistance = 10f;
     
     /// <summary>
     /// KeyValue store api uri.
@@ -77,7 +83,6 @@ public class AnchorManager : MonoBehaviour
 
     private AnchorLocateCriteria anchorLocateCriteria;
     private CloudSpatialAnchorWatcher currentWatcher;
-    private PlatformLocationProvider locationProvider;
 
     /// <summary>
     /// Our queue of actions that will be executed on the main thread.
@@ -88,18 +93,14 @@ public class AnchorManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(PeriodicGetAllSensors());
+
         // Get a reference to the SpatialAnchorManager component (must be on the same gameobject)
         cloudManager = GetComponent<SpatialAnchorManager>();
-
-        // Register for Azure Spatial Anchor events
-        // cloudManager.AnchorLocated += CloudManager_AnchorLocated;
-
-        anchorLocateCriteria = new AnchorLocateCriteria();
 
         //OpenSystemKeyboard();
 
         ConfigureSessionAsync();
-        StartCoroutine(GetAllSensors());
     }
 
     // Update is called once per frame
@@ -159,6 +160,7 @@ public class AnchorManager : MonoBehaviour
             btnCollMain.SetActive(true);
             btnCollEdit.SetActive(false);
             ResetCurrent();
+            keyboard.ClearKeyboardText();
         }
         else
         {
@@ -220,20 +222,30 @@ public class AnchorManager : MonoBehaviour
         // UnityDispatcher.InvokeOnAppThread(() => this.feedbackBox.text = string.Format("Error: {0}", exception.ToString()));
     }
 
-    protected virtual void OnCloudAnchorLocated(object sender, AnchorLocatedEventArgs args)
+    private void OnCloudAnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
+        Debug.Log("Why are we here?");
+        System.Diagnostics.Debug.WriteLine("Why are we here?");
+        System.Diagnostics.Debug.WriteLine(args);
         if (args.Status == LocateAnchorStatus.Located)
         {
             CloudSpatialAnchor cloudAnchor = args.Anchor;
-
-            UnityDispatcher.InvokeOnAppThread(() =>
+            Debug.Log($"Located: {cloudAnchor.Identifier}");
+            if (idDictionary.ContainsKey(cloudAnchor.Identifier))
             {
-                Pose anchorPose = Pose.identity;
+                UnityDispatcher.InvokeOnAppThread(() =>
+                {
+                    Debug.Log($"Trying to place located anchor");
+                    Pose anchorPose = Pose.identity;
 
-                GameObject sensor = CreateLocalSensor(anchorPose.position);
-                CloudNativeAnchor cloudNativeAnchor = sensor.GetComponent<CloudNativeAnchor>();
-                cloudNativeAnchor.CloudToNative(cloudAnchor);
-            });
+                    GameObject sensor = CreateLocalSensor(anchorPose.position);
+                    Sensor sensorSensor = sensor.GetComponent<Sensor>();
+                    sensorSensor.SetSensorID(idDictionary[cloudAnchor.Identifier]);
+                    CloudNativeAnchor cloudNativeAnchor = sensor.GetComponent<CloudNativeAnchor>();
+                    cloudNativeAnchor.CloudToNative(cloudAnchor);
+                    objectDictionary.Add(sensor, cloudAnchor);
+                });
+            }
         }
     }
     #endregion
@@ -242,16 +254,22 @@ public class AnchorManager : MonoBehaviour
     private async void ConfigureSessionAsync()
     {
         await cloudManager.CreateSessionAsync();
+
+        cloudManager.AnchorLocated += OnCloudAnchorLocated;
+        
         await cloudManager.StartSessionAsync();
-        locationProvider = new PlatformLocationProvider();
-        cloudManager.Session.LocationProvider = locationProvider;
+        
+        anchorLocateCriteria = new AnchorLocateCriteria();
+        anchorLocateCriteria.Identifiers = idDictionary.Keys.ToArray();
+        anchorLocateCriteria.BypassCache = true;
+        anchorLocateCriteria.Strategy = LocateStrategy.AnyStrategy;
+        currentWatcher = cloudManager.Session.CreateWatcher(anchorLocateCriteria);
     }
 
     private void ResetCurrent()
     {
         currentSensor = null;
         currentSensorSensor = null;
-        currentSensorToolTip = null;
         currentID = null;
         currentCloudAnchor = null;
     }
@@ -316,10 +334,10 @@ public class AnchorManager : MonoBehaviour
             OnSaveCloudAnchorFailed(ex);
         }
 
-        string uri = kvStoreApiUri + "/set_anchor";
+        string uri = kvStoreApiUri + "/set";
         WWWForm form = new WWWForm();
-        form.AddField("SensorID", currentID);
         form.AddField("AnchorID", currentCloudAnchor.Identifier);
+        form.AddField("SensorID", currentID);
 
         using (UnityWebRequest www = UnityWebRequest.Post(uri, form))
         {
@@ -334,7 +352,8 @@ public class AnchorManager : MonoBehaviour
             }
         }
 
-        sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor);
+        //sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor));
+        objectDictionary.Add(currentSensor, currentCloudAnchor);
         ResetCurrent();
     }
 
@@ -373,11 +392,22 @@ public class AnchorManager : MonoBehaviour
     #endregion
 
     #region Coroutines
+    IEnumerator PeriodicGetAllSensors()
+    {
+        while (true)
+        {
+            StartCoroutine(GetAllSensors());
+            yield return new WaitForSeconds(60);
+        }
+    }
+
     IEnumerator GetAllSensors()
     {
-        string uri = kvStoreApiUri + "/get_anchors";
+        string uri = kvStoreApiUri + "/get_all";
 
         Debug.Log(uri);
+        System.Diagnostics.Debug.WriteLine("This is a test");
+        System.Diagnostics.Debug.WriteLine(uri);
 
         using (UnityWebRequest www = UnityWebRequest.Get(uri))
         {
@@ -391,14 +421,9 @@ public class AnchorManager : MonoBehaviour
                 Debug.Log("Success");
 
                 var json = www.downloadHandler.text;
-                Debug.Log(json);
-
-                JObject list = JObject.Parse(json);
-
-                foreach(var kvpair in list)
-                {
-                    // currentCloudAnchor = 
-                }
+                JObject dict = JObject.Parse(json);
+                idDictionary = dict.ToObject<Dictionary<string, string>>();
+                Debug.Log(idDictionary.ToString());
             }
         }
     }
