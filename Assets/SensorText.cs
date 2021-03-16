@@ -6,24 +6,21 @@ using UnityEngine;
 public class SensorText : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshPro target;
+    private TextMeshProUGUI target;
+
     [SerializeField]
     private NetworkGadget network;
-
     void Start()
     {
+        network.DataAvailable += setText;
         target.text = "No Input Yet";
     }
-
-    public void Select() {
-
-        network.DataUpdate += setText;
-    }
-    public void UnSelect() {
-        network.DataUpdate -= setText;
-    }
-
-    void setText(SensorData data) {
-        target.text = data.getTextOutput();
+    public void setText(SensorHandler handler) {
+#if UNITY_EDITOR
+        Debug.Log("Setting Text : "+ handler.getTextOutput());
+#endif        
+        target.text = handler.getTextOutput();
+        Canvas.ForceUpdateCanvases();
+        //target.ForceMeshUpdate(true, true);
     }
 }

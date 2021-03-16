@@ -5,19 +5,25 @@ using UnityEngine;
 
 public abstract class SensorDataFactory 
 {
-    public SensorData Data { get; set; }
-    public virtual SensorData SensorFactory(string message) {
+    public SensorHandler handler { get; set; }
+    public SensorData data { get; set; }
+    public abstract SensorHandler SensorFactory();
+
+    public virtual SensorData FactorySensorData(string message)
+    {
         try
         {
             var value = JsonUtility.FromJson<SensorData>(message);
-            Data = value;
+            data = value;
             return value;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-
+            Debug.Log(e.Message);
             throw;
         }
     }
+
+
 }
 

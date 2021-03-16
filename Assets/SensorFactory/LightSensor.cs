@@ -9,29 +9,20 @@ namespace Assets.SensorFactory
 {
     public class LightSensorFactory : SensorDataFactory
     {
-        public override SensorData SensorFactory(string message)
+        public override SensorHandler SensorFactory()
         {
-            try
-            {
-                var value = JsonUtility.FromJson<SensorData>(message);
-                var res = new LightSensor();
-                res.SetBaseProperties(value);
-                Data = value;
-                return res;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return new LightSensor(data);
         }
     }
-    public class LightSensor : SensorData 
+    public class LightSensor : SensorHandler
     {
-       
+        public LightSensor(SensorData data) : base(data)
+        {
+        }
+
         public override string getTextOutput()
         {
-            return "Light level: " + propertiy.value;
+            return "Light level: " + data.value;
         }
     }
 }

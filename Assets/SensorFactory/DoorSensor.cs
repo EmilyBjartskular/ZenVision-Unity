@@ -7,30 +7,22 @@ namespace Assets.SensorFactory
 {
     public class DoorSensorFactory : SensorDataFactory
     {
-        public override SensorData SensorFactory(string message)
+        public override SensorHandler SensorFactory()
         {
-            try
-            {
-                var value = JsonUtility.FromJson<SensorData>(message);
-                var res = new DoorSensor();
-                res.SetBaseProperties(value);
-                Data = value;
-                return res;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return new DoorSensor(data);
         }
     }
 
-    public class DoorSensor : SensorData
+    public class DoorSensor : SensorHandler
     {
+        public DoorSensor(SensorData data) : base(data)
+        {
+            this.data = data;
+        }
 
         public override string getTextOutput() 
         {
-            return propertiy.value.Equals("true") ? "Open" : "Closed";
+            return data.value.Equals("true") ? "Open" : "Closed";
         }
 
     }
