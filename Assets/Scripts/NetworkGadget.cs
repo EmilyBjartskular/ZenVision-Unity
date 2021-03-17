@@ -17,7 +17,7 @@ public class NetworkGadget : MonoBehaviour
 {
 
     public static readonly string ENDPOINT = "ws://localhost:8080/";
-    private WebsocketClient client { get; set; }
+    private WebsocketClient client;
 
     [SerializeField]
     private string id;
@@ -30,10 +30,9 @@ public class NetworkGadget : MonoBehaviour
     [ContextMenu("Start Network")]
     public async void StartNetwork()
     {
-        if (client == null) 
+        if (client == null)
         {
             client = new WebsocketClient(new Uri(ENDPOINT));
-            client.messageReceived += FactoryNewData;
         }
         await client.Connect();
         await client.Send(id);
@@ -41,7 +40,6 @@ public class NetworkGadget : MonoBehaviour
     [ContextMenu("Stop Network")]
     public void StopNetwork()
     {
-        client.messageReceived -= FactoryNewData;
         client.CloseConnection();
         client = null;
     }
@@ -69,8 +67,20 @@ public class NetworkGadget : MonoBehaviour
         DataAvailable.Invoke(factory.SensorFactory());
 
     }
-    public void Start()
+
+    public void Update()
     {
+        if(client != null) //there is an connection
+        {
+            while (!client.receiveQueue.IsEmpty)
+            {
+                string msg;
+                client.receiveQueue.TryDequeue(out msg);
+                FactoryNewData(msg);
+            }
+
+        }
+       
     }
 
 

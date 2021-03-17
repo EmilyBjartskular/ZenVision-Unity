@@ -16,7 +16,7 @@ using System.Collections.Concurrent;
 public class WebsocketClient
 {
 
-    public Action<string> messageReceived { get; set; }
+    public ConcurrentQueue<String> receiveQueue { get; }
 
 #if UNITY_EDITOR
     private ClientWebSocket client;
@@ -24,7 +24,6 @@ public class WebsocketClient
     private Thread processThread;
     private const UInt64 MAXREADSIZE = 10 * 1024 * 1024;
     public BlockingCollection<string> sendQueue { get; }
-    
 
 #elif WINDOWS_UWP || UNITY_WSA_10_0 || UNITY_WSA
     private MessageWebSocket client;
@@ -35,6 +34,8 @@ public class WebsocketClient
     public WebsocketClient(Uri uri)
     {
         URI = uri;
+        receiveQueue = new ConcurrentQueue<string>();
+
 #if UNITY_EDITOR
         encoder = new UTF8Encoding();
         client = new ClientWebSocket();
@@ -103,7 +104,7 @@ public class WebsocketClient
 
 #if UNITY_EDITOR
 
-    private async Task Receive()
+    private async Task<string> Receive()
     {
         try
         {
@@ -119,25 +120,24 @@ public class WebsocketClient
                     stream.Write(arrayBuf.Array, arrayBuf.Offset, chunkResult.Count);
                     if ((UInt64)(chunkResult.Count) > MAXREADSIZE)
                     {
-                        Console.Error.WriteLine("Warning: Message is bigger than expected!");//todo fix open stack issue
+                        Console.Error.WriteLine("Warning: Message is bigger than expected!");
+                        throw new StackOverflowException();
                     }
                 } while (!chunkResult.EndOfMessage);
                 stream.Seek(0, SeekOrigin.Begin);
 
                 if (chunkResult.MessageType == WebSocketMessageType.Text)
                 {
-                    string message = StreamToString(stream);
-                    //messageReceived(message);
-                    Debug.Log(message);
+                    return StreamToString(stream);
                 }
             }
+            return "";
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
             throw;
         }
-        
 
 
     }
@@ -151,7 +151,8 @@ public class WebsocketClient
             try
             {
                 string read = reader.ReadString(reader.UnconsumedBufferLength);
-                messageReceived(read);
+                if(!String.IsNullOrEmpty(read))
+                    receiveQueue.Enqueue(read);
             }
             catch (Exception ex)
             {
@@ -186,7 +187,9 @@ public class WebsocketClient
             }
             else
             {
-                await Receive(); //will this stop sending from happening? mostly server will send responses to the client and mostly should not be reciving data. but sending also intails queries that server responds too
+                var message = await Receive();
+                if (!String.IsNullOrEmpty(message))
+                    this.receiveQueue.Enqueue(message);
                 await Task.Yield();
             }
         }
