@@ -2,18 +2,19 @@
 
 namespace Assets.SensorFactory
 {
-    public class DefaultSensor : SensorHandler
+    public class ZWaveSensor : SensorHandler
     {
-        public DefaultSensor(SensorData data) : base(data)
+        public ZWaveSensor(SensorData data) : base(data)
         {
         }
 
         public override string getTextOutput()
         {
-            return ToString();
+            string body = ToString();
+            return body.Remove(body.Length - 1 - data.value.Length - 7, body.Length - 1);
         }
     }
-    public class DefaultSensorFactory : SensorDataFactory
+    public class ZWaveSensorFactory : SensorDataFactory
     {
 
         public override SensorHandler SensorFactory()

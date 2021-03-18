@@ -20,9 +20,11 @@ namespace Assets.SensorFactory
             this.data = data;
         }
 
-        public override string getTextOutput() 
+        public override string getTextOutput()
         {
-            return data.value.Equals("true") ? "Open" : "Closed";
+            string body = ToString();
+            string value = data.value.Equals("true") ? "Open" : "Closed";
+            return body.Remove(body.Length - 1 - data.value.Length - 7, body.Length - 1) + "Status: " + value;
         }
 
     }

@@ -12,14 +12,13 @@ public enum SensorType
 public class NetworkGadget : MonoBehaviour
 {
 
-    public static readonly string ENDPOINT = "ws://130.240.114.14:8010/";
+    public string Endpoint = "ws://130.240.114.14:8010/";
+
     private WebsocketClient client;
 
-    [SerializeField]
-    private string id;
+    public string ID { get; set; }
 
-    [SerializeField]
-    private SensorType type = SensorType.DefaultSensor;
+    public SensorType Type { get; set; } = SensorType.DefaultSensor;
 
     public Action<SensorHandler> DataAvailable { get; set; }
 
@@ -28,10 +27,10 @@ public class NetworkGadget : MonoBehaviour
     {
         if (client == null)
         {
-            client = new WebsocketClient(new Uri(ENDPOINT));
+            client = new WebsocketClient(new Uri(Endpoint));
+            await client.Connect();
         }
-        await client.Connect();
-        await client.Send(id);
+        await client.Send(ID);
     }
     [ContextMenu("Stop Network")]
     public void StopNetwork()
@@ -46,7 +45,7 @@ public class NetworkGadget : MonoBehaviour
 
     public SensorDataFactory GetSensorFactory()
     {
-        switch (type)
+        switch (Type)
         {
             case SensorType.DoorSensor:
                 return new DoorSensorFactory();

@@ -18,7 +18,7 @@ public class SensorText : MonoBehaviour
     public void setText(SensorHandler handler) {
 #if UNITY_EDITOR
         Debug.Log("Setting Text : "+ handler.getTextOutput());
-#endif        
+#endif
         target.text = handler.getTextOutput();
         Canvas.ForceUpdateCanvases();
         //target.ForceMeshUpdate(true, true);
