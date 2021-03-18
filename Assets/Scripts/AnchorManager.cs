@@ -101,6 +101,8 @@ public class AnchorManager : MonoBehaviour
         //OpenSystemKeyboard();
 
         ConfigureSessionAsync();
+
+        
     }
 
     // Update is called once per frame
