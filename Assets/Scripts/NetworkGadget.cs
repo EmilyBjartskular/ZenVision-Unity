@@ -82,7 +82,7 @@ public class NetworkGadget : MonoBehaviour
 
     public void Update()
     {
-        if(client != null) //there is an connection
+        if (client != null) //there is an connection
         {
             while (!client.receiveQueue.IsEmpty)
             {
@@ -92,7 +92,7 @@ public class NetworkGadget : MonoBehaviour
             }
 
         }
-       
+
     }
 
 

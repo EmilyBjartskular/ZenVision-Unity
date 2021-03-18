@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Assets.SensorFactory.DefaultSensor" Collapsed="true">
+    <Position X="1.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\DefaultSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.DefaultSensorFactory" Collapsed="true">
+    <Position X="6" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\DefaultSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.DoorSensorFactory" Collapsed="true">
+    <Position X="10.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\DoorSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.DoorSensor" Collapsed="true">
+    <Position X="12.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\DoorSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.EffectSensor" Collapsed="true">
+    <Position X="15" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\EffectSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.EffectSensorFactory" Collapsed="true">
+    <Position X="1.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\EffectSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.HumiditySensor" Collapsed="true">
+    <Position X="6" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\HumiditySensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.HumiditySensorFactory" Collapsed="true">
+    <Position X="12.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\HumiditySensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.LightSensorFactory" Collapsed="true">
+    <Position X="17.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\LightSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.LightSensor" Collapsed="true">
+    <Position X="17.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\LightSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.MotionSensor" Collapsed="true">
+    <Position X="3.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\MotionSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.MotionSensorFactory" Collapsed="true">
+    <Position X="8.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\MotionSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.MultiLevelSensor" Collapsed="true">
+    <Position X="10.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\MultiLevelSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.MultiLevelSensorFactory" Collapsed="true">
+    <Position X="19.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\MultiLevelSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.TempSensor" Collapsed="true">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\TempSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.TempSensorFactory" Collapsed="true">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\TempSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.ZWaveSensor" Collapsed="true">
+    <Position X="8.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\ZWaveSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.SensorFactory.ZWaveSensorFactory" Collapsed="true">
+    <Position X="15" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\ZWaveSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SensorHandler">
+    <Position X="10.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEAAAAAAAAAAAQAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\SensorData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SensorData">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAgFACAAAAAAABAAAgQ=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\SensorData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SensorDataFactory">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAABAYAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SensorFactory\SensorDataFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
