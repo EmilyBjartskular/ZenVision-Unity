@@ -22,7 +22,8 @@ namespace Assets.SensorFactory
 
         public override string getTextOutput()
         {
-            return "Light level: " + data.value;
+            string body = ToString();
+            return body.Remove(body.Length - 1 - data.value.Length - 7, body.Length-1) + "Light level: " + data.value + "lx";
         }
     }
 }

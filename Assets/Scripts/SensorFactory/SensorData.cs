@@ -6,6 +6,19 @@ using UnityEngine;
 public abstract class SensorHandler
 {
     public SensorData data { get; set; }
+
+    public override string ToString()
+    {
+        DateTime created = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime modified = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        return $"ID: {data.id}\n" +
+            $"Type: {data.type}\n" +
+            $"Created: {created.AddMilliseconds(data.created)}\n" +
+            $"Modified: {modified.AddMilliseconds(data.created)}\n" +
+            $"Battery: {data.batteryLevel}%" +
+            $"value: {data.value}";
+    }
+
     public string getCurrentData()
     {
         return this.data.value;

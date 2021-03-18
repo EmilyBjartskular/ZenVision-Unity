@@ -6,7 +6,7 @@ using System;
 
 public enum SensorType
 {
-    DoorSensor, LightSensor, DefaultSensor
+    DoorSensor, LightSensor, DefaultSensor, EffectSensor, TemperatureSensor, HumiditySensor, MultiLevelSensor, ZWaveSensor, MotionSensor
 }
 
 public class NetworkGadget : MonoBehaviour
@@ -54,6 +54,18 @@ public class NetworkGadget : MonoBehaviour
                 return new LightSensorFactory();
             case SensorType.DefaultSensor:
                 return new DefaultSensorFactory();
+            case SensorType.EffectSensor:
+                return new EffectSensorFactory();
+            case SensorType.TemperatureSensor:
+                return new TempSensorFactory();
+            case SensorType.HumiditySensor:
+                return new HumiditySensorFactory();
+            case SensorType.MultiLevelSensor:
+                return new MultiLevelSensorFactory();
+            case SensorType.ZWaveSensor:
+                return new ZWaveSensorFactory();
+            case SensorType.MotionSensor:
+                return new MotionSensorFactory();
         }
 
         return null;
@@ -64,7 +76,7 @@ public class NetworkGadget : MonoBehaviour
     {
         var factory = GetSensorFactory();
         factory.FactorySensorData(message);
-        DataAvailable.Invoke(factory.SensorFactory());
+        DataAvailable?.Invoke(factory.SensorFactory());
 
     }
 
