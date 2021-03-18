@@ -16,7 +16,7 @@ public abstract class SensorHandler
             $"Type: {data.type}\n" +
             $"Created: {created.AddMilliseconds(data.created)}\n" +
             $"Modified: {modified.AddMilliseconds(data.created)}\n" +
-            $"Battery: {data.batteryLevel}%" +
+            $"Battery: {data.batteryLevel}\u0025\n" +
             $"value: {data.value}";
     }
 
