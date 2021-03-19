@@ -305,9 +305,6 @@ public class AnchorManager : MonoBehaviour
 //#if HOLOLENS
     private void OnCloudAnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
-        Debug.Log("Why are we here?");
-        System.Diagnostics.Debug.WriteLine("Why are we here?");
-        System.Diagnostics.Debug.WriteLine(args);
         if (args.Status == LocateAnchorStatus.Located)
         {
             CloudSpatialAnchor cloudAnchor = args.Anchor;
@@ -466,6 +463,9 @@ public class AnchorManager : MonoBehaviour
             OnSaveCloudAnchorFailed(ex);
         }
 
+        StartCoroutine(GetSType());
+        await Task.Delay(1000);
+
         string uri = kvStoreApiUri + "/set";
         WWWForm form = new WWWForm();
         form.AddField("AnchorID", currentCloudAnchor.Identifier);
@@ -484,10 +484,18 @@ public class AnchorManager : MonoBehaviour
             }
         }
 
+
+        //sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor));
+        objectDictionary.Add(currentSensor, currentCloudAnchor);
+//#endif
+    }
+
+    private IEnumerator GetSType()
+    {
         string uri2 = $"{apiUri}/api/type/{currentSensorSensor.SensorID}";
         using (UnityWebRequest www = UnityWebRequest.Get(uri2))
         {
-            www.SendWebRequest();
+            yield return www.SendWebRequest();
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
@@ -496,8 +504,11 @@ public class AnchorManager : MonoBehaviour
             {
                 Debug.Log("Success");
                 var json = www.downloadHandler.text;
+                Debug.Log(json);
                 JObject dict = JObject.Parse(json);
+                Debug.Log(dict);
                 var val = (string)dict["type"];
+                Debug.Log(val);
                 try
                 {
 
@@ -510,11 +521,6 @@ public class AnchorManager : MonoBehaviour
                 }
             }
         }
-
-
-        //sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor));
-        objectDictionary.Add(currentSensor, currentCloudAnchor);
-//#endif
     }
 
     /// <summary>
@@ -541,7 +547,8 @@ public class AnchorManager : MonoBehaviour
         Sensor newGameObjectSensor = newGameObject.GetComponent<Sensor>();
         newGameObjectSensor.Manager = this;
         newGameObjectSensor.Network = GetComponent<NetworkGadget>();
-        newGameObjectSensor.DataWindow = DataWindow;
+        newGameObjectSensor.DataWindow = GameObject.FindGameObjectWithTag("DataWindow");
+        Debug.Log(newGameObjectSensor.DataWindow);
 
         Debug.Log("ASA Info: Created a local anchor.");
         // Return created object
