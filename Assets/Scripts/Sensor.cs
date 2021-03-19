@@ -14,6 +14,8 @@ public class Sensor : MonoBehaviour
 
     public Interactable button;
 
+    public GameObject DataWindow { get; set; }
+
     public NetworkGadget Network { get; set; }
 
     public AnchorManager Manager { get; set; }
@@ -36,19 +38,14 @@ public class Sensor : MonoBehaviour
     {
         if (Manager.DeleteMode)
         {
-            Manager.DeleteSensorAsync(gameObject, SensorID);
+            Manager.DeleteSensorAsync(gameObject, sensorID);
         }
         else
         {
-            GameObject.FindGameObjectWithTag("DataWindow").SetActive(true);
-            Network.ID = SensorID;
+            DataWindow.SetActive(true);
+            Network.ID = sensorID;
             Network.Type = SensorType;
             Network.StartNetwork();
         }
-    }
-
-    public void UpdateNetworkGadget()
-    {
-        Network.ID = SensorID;
     }
 }

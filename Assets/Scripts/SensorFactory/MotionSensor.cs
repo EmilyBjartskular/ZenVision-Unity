@@ -12,7 +12,7 @@ namespace Assets.SensorFactory
         {
             string body = ToString();
             string value = data.value.Equals("true") ? "No detected motion" : "Motion!";
-            return body.Remove(body.Length - 1 - data.value.Length - 7, body.Length - 1) + "Status: " + value;
+            return body.Remove(body.Length - data.value.Length - 7) + "Status: " + value;
         }
     }
     public class MotionSensorFactory : SensorDataFactory

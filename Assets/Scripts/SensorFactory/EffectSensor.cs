@@ -11,7 +11,7 @@ namespace Assets.SensorFactory
         public override string getTextOutput()
         {
             string body = ToString();
-            return body.Remove(body.Length - data.value.Length - 1, body.Length - 1) + data.value + "W";
+            return body.Remove(body.Length - data.value.Length) + data.value + "W";
         }
     }
     public class EffectSensorFactory : SensorDataFactory

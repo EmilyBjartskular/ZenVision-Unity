@@ -1,6 +1,6 @@
-﻿#if WINDOWS_UWP
-#define HOLOLENS
-#endif
+﻿//#if WINDOWS_UWP
+//#define HOLOLENS
+//#endif
 
 //#define HOLOLENS
 
@@ -11,10 +11,10 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-#if HOLOLENS
+//#if HOLOLENS
 using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
-#endif
+//#endif
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
@@ -28,9 +28,9 @@ using Windows.Storage;
 
 public class AnchorManager : MonoBehaviour
 {
-#if HOLOLENS
+//#if HOLOLENS
     private Dictionary<GameObject, CloudSpatialAnchor> objectDictionary = new Dictionary<GameObject, CloudSpatialAnchor>();
-#endif
+//#endif
     // <AnchorID, SensorID>
     private Dictionary<string, string> idDictionary = new Dictionary<string, string>();
     //private bool editMode = false;
@@ -38,9 +38,9 @@ public class AnchorManager : MonoBehaviour
 
     private GameObject currentSensor;
     private Sensor currentSensorSensor;
-#if HOLOLENS
+//#if HOLOLENS
     private CloudSpatialAnchor currentCloudAnchor;
-#endif
+//#endif
 
     private string keyboardText;
     private bool keyboardActive = false;
@@ -49,12 +49,12 @@ public class AnchorManager : MonoBehaviour
     /// <summary>
     /// Reference to the SpatialAnchorManager object.
     /// </summary>
-#if HOLOLENS
+//#if HOLOLENS
     private SpatialAnchorManager cloudManager;
 
     private AnchorLocateCriteria anchorLocateCriteria;
     private CloudSpatialAnchorWatcher currentWatcher;
-#endif
+//#endif
 
     /// <summary>
     /// Our queue of actions that will be executed on the main thread.
@@ -106,20 +106,23 @@ public class AnchorManager : MonoBehaviour
     [SerializeField]
     private MixedRealityKeyboard keyboard;
 
+    [SerializeField]
+    private GameObject DataWindow;
+
     #region Unity Lifecycle
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(PeriodicGetAllSensors());
 
-#if HOLOLENS
+//#if HOLOLENS
         // Get a reference to the SpatialAnchorManager component (must be on the same gameobject)
         cloudManager = GetComponent<SpatialAnchorManager>();
 
         //OpenSystemKeyboard();
 
         ConfigureSessionAsync();
-#endif
+//#endif
 
     }
 
@@ -144,7 +147,7 @@ public class AnchorManager : MonoBehaviour
 
     void OnDestroy()
     {
-#if HOLOLENS
+//#if HOLOLENS
         if (cloudManager != null && cloudManager.Session != null)
         {
             cloudManager.DestroySession();
@@ -155,7 +158,7 @@ public class AnchorManager : MonoBehaviour
             currentWatcher.Stop();
             currentWatcher = null;
         }
-#endif
+//#endif
     }
     #endregion
 
@@ -177,14 +180,14 @@ public class AnchorManager : MonoBehaviour
 
     public void DeleteSensors()
     {
-#if HOLOLENS
+//#if HOLOLENS
         DeleteMode = true;
-#endif
+//#endif
     }
 
     public async void DeleteSensorAsync(GameObject sensor, string sensorId)
     {
-#if HOLOLENS
+//#if HOLOLENS
         string uri = kvStoreApiUri + "/delete";
         WWWForm id = new WWWForm();
         id.AddField("AnchorID", objectDictionary[sensor].Identifier);
@@ -200,13 +203,13 @@ public class AnchorManager : MonoBehaviour
                 Debug.Log($"Sensor {sensorId} has been deleted");
                 await cloudManager.DeleteAnchorAsync(objectDictionary[sensor]);
                 objectDictionary.Remove(sensor);
-#endif
+//#endif
                 idDictionary.Remove(sensorId);
                 Destroy(sensor);
-#if HOLOLENS
+//#if HOLOLENS
             }
         }
-#endif
+//#endif
     }
 
     public async void SaveEdit()
@@ -292,10 +295,14 @@ public class AnchorManager : MonoBehaviour
         Debug.LogException(exception);
         Debug.Log("Failed to save anchor " + exception.ToString());
 
+
+        System.Diagnostics.Debug.WriteLine(exception);
+        System.Diagnostics.Debug.WriteLine("Failed to save anchor " + exception.ToString());
+
         // UnityDispatcher.InvokeOnAppThread(() => this.feedbackBox.text = string.Format("Error: {0}", exception.ToString()));
     }
 
-#if HOLOLENS
+//#if HOLOLENS
     private void OnCloudAnchorLocated(object sender, AnchorLocatedEventArgs args)
     {
         Debug.Log("Why are we here?");
@@ -319,15 +326,42 @@ public class AnchorManager : MonoBehaviour
                     CloudNativeAnchor cloudNativeAnchor = sensor.GetComponent<CloudNativeAnchor>();
                     cloudNativeAnchor.CloudToNative(cloudAnchor);
                     objectDictionary.Add(sensor, cloudAnchor);
+
+                    string uri = $"{apiUri}/api/type/{currentSensorSensor.SensorID}";
+                    using (UnityWebRequest www = UnityWebRequest.Get(uri))
+                    {
+                        www.SendWebRequest();
+                        if (www.isNetworkError || www.isHttpError)
+                        {
+                            Debug.Log(www.error);
+                        }
+                        else
+                        {
+                            Debug.Log("Success");
+                            var json = www.downloadHandler.text;
+                            JObject dict = JObject.Parse(json);
+                            var val = (string)dict["type"];
+                            try
+                            {
+
+                                sensorSensor.SensorType = (SensorType)Enum.Parse(typeof(SensorType), val);
+                            }
+                            catch (ArgumentException)
+                            {
+                                Debug.Log($"Could not cast '{val}' to known SensorType");
+                                sensorSensor.SensorType = SensorType.DefaultSensor;
+                            }
+                        }
+                    }
                 });
             }
         }
     }
-#endif
+//#endif
     #endregion
 
     #region Internal functions
-#if HOLOLENS
+//#if HOLOLENS
     private async void ConfigureSessionAsync()
     {
         await cloudManager.CreateSessionAsync();
@@ -335,22 +369,35 @@ public class AnchorManager : MonoBehaviour
         cloudManager.AnchorLocated += OnCloudAnchorLocated;
 
         await cloudManager.StartSessionAsync();
+        
+        //PlatformLocationProvider locationProvider = new PlatformLocationProvider();
+        //locationProvider.Sensors.BluetoothEnabled = true;
+        //locationProvider.Sensors.GeoLocationEnabled = true;
+        //locationProvider.Sensors.WifiEnabled = true;
+        //locationProvider.Sensors.KnownBeaconProximityUuids = ...
+        //cloudManager.Session.LocationProvider = locationProvider;
 
         anchorLocateCriteria = new AnchorLocateCriteria();
+
+        //NearDeviceCriteria nearDevice = new NearDeviceCriteria();
+        //nearDevice.DistanceInMeters = anchorFindDistance;
+        //nearDevice.MaxResultCount = 100;
+        //anchorLocateCriteria.NearDevice = nearDevice;
+
         anchorLocateCriteria.Identifiers = idDictionary.Keys.ToArray();
-        anchorLocateCriteria.BypassCache = true;
-        anchorLocateCriteria.Strategy = LocateStrategy.AnyStrategy;
+        //anchorLocateCriteria.BypassCache = true;
+        //anchorLocateCriteria.Strategy = LocateStrategy.AnyStrategy;
         currentWatcher = cloudManager.Session.CreateWatcher(anchorLocateCriteria);
     }
-#endif
+//#endif
 
     private void ResetCurrent()
     {
         currentSensor = null;
         currentSensorSensor = null;
-#if HOLOLENS
+//#if HOLOLENS
         currentCloudAnchor = null;
-#endif
+//#endif
     }
 
     private void QueueOnUpdate(Action updateAction)
@@ -368,7 +415,7 @@ public class AnchorManager : MonoBehaviour
     {
         Debug.Log(currentSensor);
 
-#if HOLOLENS
+//#if HOLOLENS
         // Get the cloud-native anchor behavior
         CloudNativeAnchor cna = currentSensor.GetComponent<CloudNativeAnchor>();
 
@@ -387,6 +434,10 @@ public class AnchorManager : MonoBehaviour
 
         bool success = false;
 
+        Debug.Log(cloudManager.SessionStatus);
+        Debug.Log($"Started? {cloudManager.IsSessionStarted}");
+        if(!cloudManager.IsSessionStarted) await cloudManager.StartSessionAsync();
+
         try
         {
             // Actually save
@@ -394,6 +445,7 @@ public class AnchorManager : MonoBehaviour
 
             // Store
             currentCloudAnchor = cloudAnchor;
+            Debug.Log(currentCloudAnchor);
 
             // Success?
             success = currentCloudAnchor != null;
@@ -445,7 +497,7 @@ public class AnchorManager : MonoBehaviour
                 Debug.Log("Success");
                 var json = www.downloadHandler.text;
                 JObject dict = JObject.Parse(json);
-                var val = (string)dict.ToObject<List<string>>()[1];
+                var val = (string)dict["type"];
                 try
                 {
 
@@ -462,12 +514,7 @@ public class AnchorManager : MonoBehaviour
 
         //sensorAnchorList.Add(new KeyValuePair<GameObject, CloudSpatialAnchor>(currentSensor, currentCloudAnchor));
         objectDictionary.Add(currentSensor, currentCloudAnchor);
-#endif
-    }
-
-    protected virtual async Task LoadAnchorFromCloudAsync(string cloudAnchor, string sensorID)
-    {
-
+//#endif
     }
 
     /// <summary>
@@ -485,15 +532,16 @@ public class AnchorManager : MonoBehaviour
         // Create a white sphere.
         // Create the prefab
         GameObject newGameObject = GameObject.Instantiate(sensorPrefab, hitPoint, Quaternion.identity) as GameObject;
-#if HOLOLENS
+//#if HOLOLENS
         // Attach a cloud-native anchor behavior to help keep cloud
         // and native anchors in sync.
         newGameObject.AddComponent<CloudNativeAnchor>();
-#endif
+//#endif
 
         Sensor newGameObjectSensor = newGameObject.GetComponent<Sensor>();
         newGameObjectSensor.Manager = this;
         newGameObjectSensor.Network = GetComponent<NetworkGadget>();
+        newGameObjectSensor.DataWindow = DataWindow;
 
         Debug.Log("ASA Info: Created a local anchor.");
         // Return created object

@@ -292,6 +292,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1410eac1ae94b4d4492a09cc368e152c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1623327496 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5424308344735707469, guid: 160ef111b016e5846b111cafc8d39214,
+    type: 3}
+  m_PrefabInstance: {fileID: 3870885449572432113}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1662244005 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3870885450057903188, guid: 160ef111b016e5846b111cafc8d39214,
@@ -543,11 +549,13 @@ MonoBehaviour:
   sensorDistance: 0.6
   anchorFindDistance: 10
   kvStoreApiUri: http://130.240.114.14:5000
+  apiUri: http://130.240.114.14:8010
   btnCreate: {fileID: 1451119131}
   btnDelete: {fileID: 867810923}
   btnSave: {fileID: 1397682206}
   btnCancel: {fileID: 495901225}
   keyboard: {fileID: 1979366140}
+  DataWindow: {fileID: 1623327496}
 --- !u!114 &1979366140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,7 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2297fb65e0b83b4585b2abf9a35d009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  Endpoint: ws://130.240.114.14:8010/
 --- !u!1001 &687884417970471644
 PrefabInstance:
   m_ObjectHideFlags: 0
