@@ -11,9 +11,50 @@ The purpose of this project was an assignment for the course M7012E at LTU (Lule
 
 ### Documentation
 ___
-#### Network
+#### Networking
+Websocket implementation classes;
+##### [NetworkGadget](https://github.com/EmilyBjartskular/ZenVision-Unity/blob/main/Assets/Scripts/NetworkGadget.cs)
+This object attaches to the display, it handles networking from unity intreface.
+When adding a new SensorType it is require that it is define a new factory supporting this type within GetSensorFactory method.
+Recommend that you find more scalable solution to this as there is quite a few sensor types, and they do not follow the same format.
 
-#### SensorFactory
+##### [Websocket](https://github.com/EmilyBjartskular/ZenVision-Unity/blob/main/Assets/Scripts/WebsocketClient.cs)
+This is a support class for dealing with websocket connections in accordance to RFC6455. Observe, that if deployed on the Hololense (WINDOWS_UWP and the like) it does not support
+video streaming or any larger format, this is because it is using [messageWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.messagewebsocket?view=winrt-19041). Reimplement with [StreamableWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.streamwebsocket?view=winrt-19041) instead.
+
+
+#### [SensorFactory](https://github.com/EmilyBjartskular/ZenVision-Unity/tree/main/Assets/Scripts/SensorFactory)
+A simple factory pattern.
+Inherit from the SensorDataFactory and manipulate an SensorHandler Object.
+Exampel:
+
+```cs
+    public class DefaultSensorFactory : SensorDataFactory
+    {
+
+        public override SensorHandler SensorFactory()
+        {
+            return new DefaultSensor(data);
+        }
+    }
+```
+
+The sensorHandler is in charge what the final output will be on for the end user, thus it deals with the data. currently there is only one supported data format between the api and
+unity. This is unfortunate and needs to be fixed in the future. The sensor data class is where the format need to be decided.
+Exampel Sensor handler:
+```cs
+public class DefaultSensor : SensorHandler
+    {
+        public DefaultSensor(SensorData data) : base(data)
+        {
+        }
+
+        public override string getTextOutput()
+        {
+            return ToString();
+        }
+    }
+```
 
 #### Azure Spacial ancor
 
