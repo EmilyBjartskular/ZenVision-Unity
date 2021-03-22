@@ -20,7 +20,7 @@ Recommend that you find more scalable solution to this as there is quite a few s
 
 ##### [Websocket](https://github.com/EmilyBjartskular/ZenVision-Unity/blob/main/Assets/Scripts/WebsocketClient.cs)
 This is a support class for dealing with websocket connections in accordance to RFC6455. Observe, that if deployed on the Hololense (WINDOWS_UWP and the like) it does not support
-video streaming or any larger format, this is because it is using [messageWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.messagewebsocket?view=winrt-19041). Reimplement with [StreamableWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.streamwebsocket?view=winrt-19041) instead.
+video streaming or any larger format, this is because it is using [messageWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.messagewebsocket?view=winrt-19041). Reimplement with [StreamableWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.streamwebsocket?view=winrt-19041) instead if you desire to support video feed.
 
 
 #### [SensorFactory](https://github.com/EmilyBjartskular/ZenVision-Unity/tree/main/Assets/Scripts/SensorFactory)
