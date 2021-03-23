@@ -19,6 +19,7 @@ When adding a new SensorType it is require that it is define a new factory suppo
 Recommend that you find more scalable solution to this as there is quite a few sensor types, and they do not follow the same format.
 
 
+___
 ##### [Websocket](https://github.com/EmilyBjartskular/ZenVision-Unity/blob/main/Assets/Scripts/WebsocketClient.cs)
 This is a support class for dealing with websocket connections in accordance to [RFC6455](https://tools.ietf.org/html/rfc6455#section-7.4.2). Observe, that if deployed on the Hololense (WINDOWS_UWP and the like) it does not support
 video streaming or any larger format, this is because it is using [messageWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.messagewebsocket?view=winrt-19041). Reimplement with [StreamableWebsocket](https://docs.microsoft.com/en-us/uwp/api/windows.networking.sockets.streamwebsocket?view=winrt-19041) instead if you desire to support video feed. Many of the UWP packages are not supported in the unity editor so define statments is nessecary for debugging.
@@ -37,6 +38,7 @@ public async void Connect(){
 ```
 Do note, that when you are dealing with Unity, it do not like that other threads or any conncurrency access public properties in the main thread. If you do it will silently kill the thread. 
 
+___
 #### [SensorFactory](https://github.com/EmilyBjartskular/ZenVision-Unity/tree/main/Assets/Scripts/SensorFactory)
 A simple factory pattern.
 Inherit from the SensorDataFactory and manipulate an SensorHandler Object.
@@ -72,6 +74,8 @@ public class DefaultSensor : SensorHandler
     }
 ```
 
+
+___
 #### Azure Spacial ancor
 
 #### 
